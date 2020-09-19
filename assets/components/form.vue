@@ -5,12 +5,12 @@
                 <h5 class="card-title text-center">What will you eat?</h5>
                 <div :class="componentClass">
                     <span>
-                        <a href="#" class="btn btn-info" @click="randomClicked">
-                            Use my location and pick it all for me!
-                        </a>
-                        <food-type/>
-                        <postcode-type  />
                         <in-or-out/>
+                        <food-type :current-value="currentValue" :cuisines="cuisines" />
+                        <button class="btn btn-info form-control" @click="randomClicked">
+                            Pick my cuisine for me!
+                        </button>
+                        <postcode-type  />
                         <br>
                     </span>
                 </div>
@@ -43,8 +43,22 @@
         },
         props: {
             formHidden: {
-                type:Boolean,
+                type: Boolean,
                 required: true
+            },
+        },
+        data() {
+            return {
+                currentValue: 'Please Select',
+                cuisines : [
+                    {name: 'Please Select'},
+                    {name: 'Indian'},
+                    {name: 'Chinese'},
+                    {name: 'American'},
+                    {name: 'Italian'},
+                    {name: 'Mexican'},
+                    {name: 'Thai'}
+                ]
             }
         },
         computed: {
@@ -58,13 +72,14 @@
                     classes.push(this.$style.collapsed);
                 }
                 return classes;
-
             }
         },
         methods: {
             randomClicked() {
-                this.$emit('generate-random');
-            }
+                const count = this.cuisines.length - 1;
+                const randomIndex = Math.floor(Math.random() * count) + 1;
+                this.currentValue = this.cuisines[randomIndex].name;
+            },
         }
     }
 

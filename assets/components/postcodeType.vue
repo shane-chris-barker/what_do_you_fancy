@@ -4,7 +4,7 @@
             Enter your postcode
         </label>
         <input type="text" name="postcode" id="postcode" class="form-control"/>
-
+        <span><a class="card-link">Use my location instead...</a></span>
     </div>
 </template>
 <script>
