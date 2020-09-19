@@ -13,29 +13,11 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-
-                            <h2>
-                                The tool for solving the question everyone hates when ordering food or picking somewhere to eat...
-                            </h2>
-                            <p>
-                                We've all been there - You and your significant other have decided that tonight, you will not cook!
-                                <br>
-                                <br>
-                                Awesome! But what comes next can lead to hours of frustration, arguments and disagreements - But no more!
-                                <br><br>
-                                Just pick the sort of food you fancy (or if you're seriously undecided,
-                                let the tool do this too), decide if you're eating in or taking out and then enter your
-                                postcode - Boom, decision made! Now go and eat!
-                            </p>
+                            <home-text :intro-hidden="introHidden"/>
                         </div>
                         <div class="col-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">What will you eat?</h5>
-                                    <Form />
+                            <Form :form-hidden="formHidden" v-on:do-search="doSearch()"/>
 
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,21 +27,33 @@
 </template>
 <script>
     import Form from '../components/Form';
-    // import Sidebar from '@/components/sidebar';
-    // import Timer from '@/components/timer';
-    // import Count from "@/components/count";
+    import HomeText from '../components/homeText'
     export default {
         name: 'Home',
+        data() {
+            return {
+                formHidden: false,
+                introHidden: false
+
+            }
+        },
         components: {
             Form,
-            // Timer,
-            // Count
+            HomeText
         },
-        mounted () {
-            axios
-                .get('/')
-                .then(response => (this.info = response))
+        methods: {
+            toggleFormHide() {
+                this.formHidden = !this.formHidden
+            },
+            toggleIntroText() {
+                this.introHidden = !this.introHidden
+            },
+            doSearch() {
+                this.toggleFormHide();
+                this.toggleIntroText()
+            }
         }
+
     }
 
 </script>
