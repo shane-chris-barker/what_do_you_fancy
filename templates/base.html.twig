@@ -1,12 +1,43 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}What do you fancy? | Food Argument Settlement Tool {% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<header class="header">
+    <nav class="navbar navbar-expand-lg navbar-dark justify-content-between">
+        <a class="navbar-brand" href="/">
+            <img src="{{ asset('build/images/fancy-logo.png' ) }}"
+                 width="50"
+                 height="50"
+                 alt="What do you fancy? Logo"
+            >
+
+            <span class="p-3">What do you fancy? | Food Argument Settlement Tool</span>
+        </a>
+
+        <ul class="navbar-nav">
+
+        </ul>
+    </nav>
+</header>
+
+{% block body %}{% endblock %}
+
+<p class="footer mb-0">
+    Built with<span> &lt;3 </span> by
+    <a href="https://github.com/shane-chris-barker" target="_blank">
+        Shane Chris Barker
+    </a>
+    - Because I've argued about this loads of times
+</p>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
 </html>
