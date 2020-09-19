@@ -10,35 +10,37 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <HomeText :intro-hidden="introHidden"/>
-                        </div>
-                        <div class="col-4"  v-show="!formHidden">
-                            <SearchForm @do-search="doSearch()" :cuisines="cuisines" :currentValue:="currentValue"/>
-                        </div>
-                        <div class="col-12" v-show="hasResults">
-                            <Result :has-results="hasResults"/>
-                        </div>
+                    <div class="row" v-show="!loading">
+                        <HomeText :intro-hidden="introHidden" class="col-6"/>
+                        <SearchForm
+                            @do-search="doSearch()"
+                            :cuisines="cuisines"
+                            :currentValue:="currentValue"
+                            v-show="!formHidden"
+                        />
+                        <Result :has-results="hasResults" v-show="hasResults"/>
                     </div>
+                    <LoadingScreen v-show="loading"/>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import Result from '../components/result';
-    import SearchForm from '../components/searchForm';
-    import HomeText from '../components/homeText'
+    import Result           from '../components/result';
+    import SearchForm       from '../components/searchForm';
+    import HomeText         from '../components/homeText';
+    import LoadingScreen    from '../components/loadingScreen';
     export default {
         name: 'Home',
         data() {
             return {
-                formHidden: false,
-                introHidden: false,
-                hasResults: false,
-                currentValue: 'Please Select',
-                cuisines : [
+                formHidden:     false,
+                introHidden:    false,
+                hasResults:     false,
+                loading:        false,
+                currentValue:   'Please Select',
+                cuisines :      [
                     {name: 'Please Select'},
                     {name: 'Indian'},
                     {name: 'Chinese'},
@@ -52,7 +54,8 @@
         components: {
             SearchForm,
             HomeText,
-            Result
+            Result,
+            LoadingScreen
         },
         methods: {
             hideSearchAndIntro() {
@@ -61,9 +64,9 @@
             },
             doSearch() {
                 this.hideSearchAndIntro();
+                this.loading = true;
             },
         }
-
     }
 
 </script>

@@ -28,7 +28,9 @@
                             Enter your postcode
                         </label>
                         <input type="text" name="postcode" id="postcode" class="form-control"/>
-                        <span><a class="card-link">Use my location instead...</a></span>
+                        <span>
+                            <a class="alert-link" @click="locationClicked">Use my location instead...</a>
+                        </span>
                     </span>
                 </div>
                 <div>
@@ -58,7 +60,10 @@
         },
         data() {
             return {
-                currentValue: 'Please Select'
+                currentValue: 'Please Select',
+                userLong: null,
+                userLang: null,
+                userLocation: null
             }
         },
         computed: {
@@ -80,6 +85,17 @@
                 const randomIndex = Math.floor(Math.random() * count) + 1;
                 this.currentValue = this.cuisines[randomIndex].name;
             },
+            locationClicked() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(this.showPosition);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            },
+            showPosition(position) {
+                this.userLang = position.coords.latitude;
+                this.userLong = position.coords.longitude;
+            }
         }
     }
 
