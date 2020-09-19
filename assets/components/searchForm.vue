@@ -1,17 +1,34 @@
 <template>
     <div>
-        <div class="card"  v-show="!formHidden">
+        <div class="card">
             <div class="card-body">
                 <h5 class="card-title text-center">What will you eat?</h5>
                 <div :class="componentClass">
                     <span>
-                        <in-or-out/>
-                        <food-type :current-value="currentValue" :cuisines="cuisines" />
+                        <label for="inOrOutSelect" class="col-form-label">
+                            Eat in or take out?
+                        </label>
+                        <select class="form-control" name="inOrOutSelect" id="inOrOutSelect">
+                            <option value="in">Eat In</option>
+                            <option value="out">Eat Out</option>
+                        </select>
+                        <label for="cuisine_select" class="col-form-label">What do you Fancy?</label>
+                        <select name="cuisine_select" id="cuisine_select" class="form-control">
+                            <option v-for="cuisine in cuisines"
+                                    :value="cuisine.name"
+                                    :selected="cuisine.name === currentValue"
+                            >
+                                {{cuisine.name}}
+                            </option>
+                        </select>
                         <button class="btn btn-info form-control" @click="randomClicked">
                             Pick my cuisine for me!
                         </button>
-                        <postcode-type  />
-                        <br>
+                        <label for="postcode" class="col-form-label">
+                            Enter your postcode
+                        </label>
+                        <input type="text" name="postcode" id="postcode" class="form-control"/>
+                        <span><a class="card-link">Use my location instead...</a></span>
                     </span>
                 </div>
                 <div>
@@ -31,34 +48,17 @@
 
 </style>
 <script>
-    import FoodType from '../components/foodType'
-    import PostcodeType from '../components/postcodeType'
-    import InOrOut from '../components/inOrOut'
     export default {
         name: 'Form',
-        components : {
-            FoodType,
-            PostcodeType,
-            InOrOut
-        },
         props: {
-            formHidden: {
-                type: Boolean,
+            cuisines: {
+                type: Array,
                 required: true
             },
         },
         data() {
             return {
-                currentValue: 'Please Select',
-                cuisines : [
-                    {name: 'Please Select'},
-                    {name: 'Indian'},
-                    {name: 'Chinese'},
-                    {name: 'American'},
-                    {name: 'Italian'},
-                    {name: 'Mexican'},
-                    {name: 'Thai'}
-                ]
+                currentValue: 'Please Select'
             }
         },
         computed: {
