@@ -31,6 +31,7 @@
     import SearchForm       from '../components/searchForm';
     import HomeText         from '../components/homeText';
     import LoadingScreen    from '../components/loadingScreen';
+    import axios            from 'axios';
     export default {
         name: 'Home',
         data() {
@@ -40,15 +41,7 @@
                 hasResults:     false,
                 loading:        false,
                 currentValue:   'Please Select',
-                cuisines :      [
-                    {name: 'Please Select'},
-                    {name: 'Indian'},
-                    {name: 'Chinese'},
-                    {name: 'American'},
-                    {name: 'Italian'},
-                    {name: 'Mexican'},
-                    {name: 'Thai'}
-                ]
+                cuisines :      []
             }
         },
         components: {
@@ -56,6 +49,11 @@
             HomeText,
             Result,
             LoadingScreen
+        },
+        async mounted() {
+            const cuisineResponse = await axios.get('/api/cuisines');
+            this.cuisines = cuisineResponse.data;
+            console.log(this.cuisines)
         },
         methods: {
             hideSearchAndIntro() {

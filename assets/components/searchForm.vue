@@ -15,8 +15,9 @@
                         <label for="cuisine_select" class="col-form-label">What do you Fancy?</label>
                         <select name="cuisine_select" id="cuisine_select" class="form-control">
                             <option v-for="cuisine in cuisines"
+                                    :key="cuisine.name"
                                     :value="cuisine.name"
-                                    :selected="cuisine.name === currentValue"
+                                    :selected="cuisine === currentValue"
                             >
                                 {{cuisine.name}}
                             </option>
