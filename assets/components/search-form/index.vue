@@ -12,19 +12,7 @@
                             <option value="in">Eat In</option>
                             <option value="out">Eat Out</option>
                         </select>
-                        <label for="cuisine_select" class="col-form-label">What do you Fancy?</label>
-                        <select name="cuisine_select" id="cuisine_select" class="form-control">
-                            <option v-for="cuisine in cuisines"
-                                    :key="cuisine.name"
-                                    :value="cuisine.name"
-                                    :selected="cuisine === currentValue"
-                            >
-                                {{cuisine.name}}
-                            </option>
-                        </select>
-                        <button class="btn btn-info form-control" @click="randomClicked">
-                            Pick my cuisine for me!
-                        </button>
+                        <CuisineList></CuisineList>
                         <label for="postcode" class="col-form-label">
                             Enter your postcode
                         </label>
@@ -43,30 +31,20 @@
         </div>
     </div>
 </template>
-
-<style lang="scss" module>
-    .component {
-        text-align: center;
-    }
-
-</style>
 <script>
+    import CuisineList from '../search-form/cuisine-list'
     export default {
         name: 'Form',
-        props: {
-            cuisines: {
-                type: Array,
-                required: true
-            },
-        },
+        components: {CuisineList},
         data() {
             return {
-                currentValue: 'Please Select',
                 userLong: null,
                 userLang: null,
-                userLocation: null
+                userLocation: null,
+
             }
         },
+
         computed: {
             /**
              *
@@ -81,11 +59,6 @@
             }
         },
         methods: {
-            randomClicked() {
-                const count = this.cuisines.length - 1;
-                const randomIndex = Math.floor(Math.random() * count) + 1;
-                this.currentValue = this.cuisines[randomIndex].name;
-            },
             locationClicked() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(this.showPosition);
@@ -99,5 +72,10 @@
             }
         }
     }
-
 </script>
+<style lang="scss" module>
+    .component {
+        text-align: center;
+    }
+
+</style>

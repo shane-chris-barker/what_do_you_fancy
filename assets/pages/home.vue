@@ -14,8 +14,6 @@
                         <HomeText :intro-hidden="introHidden" class="col-6"/>
                         <SearchForm
                             @do-search="doSearch()"
-                            :cuisines="cuisines"
-                            :currentValue:="currentValue"
                             v-show="!formHidden"
                         />
                         <Result :has-results="hasResults" v-show="hasResults"/>
@@ -28,10 +26,9 @@
 </template>
 <script>
     import Result           from '../components/result';
-    import SearchForm       from '../components/searchForm';
+    import SearchForm       from '../components/search-form';
     import HomeText         from '../components/homeText';
     import LoadingScreen    from '../components/loadingScreen';
-    import axios            from 'axios';
     export default {
         name: 'Home',
         data() {
@@ -40,8 +37,6 @@
                 introHidden:    false,
                 hasResults:     false,
                 loading:        false,
-                currentValue:   'Please Select',
-                cuisines :      []
             }
         },
         components: {
@@ -50,11 +45,7 @@
             Result,
             LoadingScreen
         },
-        async mounted() {
-            const cuisineResponse = await axios.get('/api/cuisines');
-            this.cuisines = cuisineResponse.data;
-            console.log(this.cuisines)
-        },
+
         methods: {
             hideSearchAndIntro() {
                 this.formHidden = !this.formHidden;
