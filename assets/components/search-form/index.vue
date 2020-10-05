@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="col-4">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title text-center">What will you eat?</h5>
@@ -16,7 +16,7 @@
                         <label for="postcode" class="col-form-label">
                             Enter your postcode
                         </label>
-                        <input type="text" name="postcode" id="postcode" class="form-control"/>
+                        <input type="text" name="postcode" id="postcode" class="form-control" :value="userLocation"/>
                         <span>
                             <a class="alert-link" @click="locationClicked">Use my location instead...</a>
                         </span>
@@ -33,13 +33,14 @@
 </template>
 <script>
     import CuisineList from '../search-form/cuisine-list'
+    import axios from 'axios';
     export default {
         name: 'Form',
         components: {CuisineList},
         data() {
             return {
                 userLong: null,
-                userLang: null,
+                userLat: null,
                 userLocation: null,
 
             }
@@ -61,14 +62,27 @@
         methods: {
             locationClicked() {
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(this.showPosition);
+                    navigator.geolocation.getCurrentPosition(this.getUserLocation);
                 } else {
                     alert("Geolocation is not supported by this browser.");
                 }
             },
-            showPosition(position) {
-                this.userLang = position.coords.latitude;
+
+            getUserLocation(position) {
+                this.userLat = position.coords.latitude;
                 this.userLong = position.coords.longitude;
+                axios.post(
+                    '/location/detect',
+                    {
+                        long: this.userLong,
+                        lat: this.userLat
+                    })
+                    .then((response) => {
+                        this.userLocation = response.data.postcode
+                    }, (error) => {
+                        console.log(error);
+                    });
+
             }
         }
     }

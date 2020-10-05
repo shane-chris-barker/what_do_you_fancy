@@ -11,7 +11,7 @@
                         </div>
                     </div>
                     <div class="row" v-show="!loading">
-                        <HomeText :intro-hidden="introHidden" class="col-6"/>
+                        <HomeText :intro-hidden="introHidden" class="col-8"/>
                         <SearchForm
                             @do-search="doSearch()"
                             v-show="!formHidden"
