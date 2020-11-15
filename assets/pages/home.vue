@@ -148,7 +148,22 @@
 
             },
             onSubmit() {
-                alert('submitted' + this.search.selectedCuisine)
+                this.loading = true;
+
+                axios.post(
+                    '/eat',
+                    {
+                        postcode: this.search.postcode,
+                        inOrOut: this.search.inOrOut,
+                        cuisine: this.search.selectedCuisine,
+                        long: this.userLong,
+                        lat: this.userLat
+                    })
+                    .then((response) => {
+
+                    }, (error) => {
+
+                    });
 
             }
         }

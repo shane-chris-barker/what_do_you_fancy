@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use GuzzleHttp\Client;
+
+use App\Service\GoogleGeoService;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,38 +14,33 @@ use Symfony\Component\Validator\Constraints\Json;
 class LocationController extends AbstractController
 {
 
-    /** @var string  */
-    const GOOGLE_REVERSE_GEO_URL = 'https://maps.googleapis.com/maps/api/geocode/json?';
+
 
 
     /**
      * @param Request $request
      * @Route("/location/detect", name="location_detect")
      * @return JsonResponse
-     * @throws GuzzleException
      * @throws \Exception
+     * @throws GuzzleException
      *
      * Get a postcode from the user lat and long
      */
-    public function index(Request $request)
+    public function index(Request $request, GoogleGeoService $googleGeoService)
     {
         $postcode   = null;
         $data       = json_decode($request->getContent());
-        $apiKey     = $this->getParameter('app.google_geo');
 
-        $latLong    = "{$data->lat},{$data->long}";
-        $url        = self::GOOGLE_REVERSE_GEO_URL."latlng={$latLong}&key={$apiKey}";
-        $client     = new Client();
 
-        $response       = $client->get($url);
-        $responseData   = json_decode($response->getBody()->getContents());
+        $postcode = $googleGeoService->reverseGeoLookup($data->long, $data->lat);
 
-        if (property_exists($responseData, 'results') && count($responseData->results) > 0) {
-            $postcode = $responseData->results[0]->address_components[7]->long_name;
+        if (false === is_null($postcode)) {
+            // found ya
             return new JsonResponse(['success' => true, 'postcode' => $postcode]);
-        }
 
-        // no response means something went wrong
+        }
+        // no response means the user doesn't have a postcode - it can happen, they
+        // may be on a boat in the middle of the sea!
         throw new \Exception('postcode lookup failed');
 
     }
