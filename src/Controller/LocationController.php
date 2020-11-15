@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Json;
 
 class LocationController extends AbstractController
 {
@@ -21,6 +22,7 @@ class LocationController extends AbstractController
      * @Route("/location/detect", name="location_detect")
      * @return JsonResponse
      * @throws GuzzleException
+     * @throws \Exception
      *
      * Get a postcode from the user lat and long
      */
@@ -29,6 +31,7 @@ class LocationController extends AbstractController
         $postcode   = null;
         $data       = json_decode($request->getContent());
         $apiKey     = $this->getParameter('app.google_geo');
+
         $latLong    = "{$data->lat},{$data->long}";
         $url        = self::GOOGLE_REVERSE_GEO_URL."latlng={$latLong}&key={$apiKey}";
         $client     = new Client();
@@ -38,8 +41,11 @@ class LocationController extends AbstractController
 
         if (property_exists($responseData, 'results') && count($responseData->results) > 0) {
             $postcode = $responseData->results[0]->address_components[7]->long_name;
+            return new JsonResponse(['success' => true, 'postcode' => $postcode]);
         }
 
-        return new JsonResponse(['postcode' => $postcode]);
+        // no response means something went wrong
+        throw new \Exception('postcode lookup failed');
+
     }
 }
